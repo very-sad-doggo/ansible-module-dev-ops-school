@@ -1,0 +1,21 @@
+ - name: httpd_install
+   hosts: all
+   user: ansible
+   become: yes
+   become_method: sudo
+   become_user: root
+   tasks:
+   - name: install httpd
+     yum: pkg=httpd state=latest
+   - name: start httpd service
+     service: name=httpd enabled=yes
+   - name: create index.html
+     copy:
+       dest: "/var/www/html/index.html"
+       content: |
+        "Welcome to my Webserver"
+   - name: start firewalld
+     service: name=firewalld enabled=yes
+   - name: opening port for https
+     become: yes
+     ansible.posix.firewalld: service=https permanent=yes state=enabled
