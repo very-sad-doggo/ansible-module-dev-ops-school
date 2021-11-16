@@ -1,0 +1,21 @@
+- name: grub_change
+  hosts: all
+  user: ansible
+  become: yes
+  become_method: sudo
+  become_user: root
+  tasks:
+  - name: set net.ifnames to 0
+    ansible.builtin.lineinfile:
+     path: /etc/default/grub
+     regexp: '^net.ifnames='
+     line: net.ifnames=0
+  - name: set biosdevname to 0
+    ansible.builtin.lineinfile:
+     path: /etc/default/grub
+     regexp: '^biosdevname='
+     line: biosdevname=0
+  - name: write changes
+    ansible.builtin.command: grub2-mkconfig
+    register: groub_out
+    failed_when: false

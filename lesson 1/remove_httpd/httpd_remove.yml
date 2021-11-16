@@ -1,0 +1,17 @@
+- name: httpd_remove
+  hosts: all
+  user: ansible
+  become: yes
+  become_method: sudo
+  become_user: root
+  tasks:
+   - name: remove httpd
+     yum:
+      pkg: httpd
+      state: removed
+   - name: remove index.html
+     ansible.builtin.file:
+      path: /var/www/html/index.html
+      state: absent
+   - name: closing ports
+     ansible.posix.firewalld: service=https permanent=yes state=disabled
