@@ -1,0 +1,25 @@
+- name: create_users
+  hosts: all
+  user: ansible
+  become: yes
+  become_method: sudo
+  become_user: root
+  vars_files:
+    - user_pass.yml
+  tasks:
+    - name: create users
+      user: 
+        name: "{{ item.name }}"
+        home: "{{ item.homedir}} "
+        comment: "{{ item.email }}"
+        password: "{{ pwhash | password_hash('sha512') }}"
+      loop:
+        - name: alice
+          homedir: /home/alice
+          email: alice@example.com
+        - name: bob
+          homedir: /home/bob
+          email: bob@example.com
+        - name: carol
+          homedir: /home/carol
+          email: carol@example.com
